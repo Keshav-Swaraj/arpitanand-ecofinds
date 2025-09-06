@@ -15,7 +15,6 @@ export default function Home() {
   const [sortBy, setSortBy] = useState('latest');
   const [filterBy, setFilterBy] = useState('all');
 
-  // Categories data
   const categories = [
     { id: 'all', name: 'All Categories', icon: '🏠' },
     { id: 'electronics', name: 'Electronics', icon: '📱' },
@@ -132,7 +131,7 @@ export default function Home() {
           />
         </div>
         
-        {/* Sort and Filter */}
+        {/* Sort & Filter (Groupby removed) */}
         <div className="flex space-x-2 mb-4">
           <select 
             value={sortBy}
@@ -209,14 +208,14 @@ export default function Home() {
             <p className="text-gray-500">No products found</p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredProducts.map((product) => (
               <div key={product._id} className="bg-white rounded-lg shadow-sm border overflow-hidden">
                 <Link to={`/product/${product._id}`}>
                   <img 
-                    src={product.image || "https://via.placeholder.com/150"} 
+                    src={product.image || "https://via.placeholder.com/300x200"} 
                     alt={product.title} 
-                    className="w-full h-32 object-cover" 
+                    className="w-full h-48 object-cover rounded-t-lg" 
                   />
                 </Link>
                 <div className="p-3">
@@ -241,7 +240,6 @@ export default function Home() {
       </div>
 
       <div className="h-20"></div>
-
       <MobileMenu isOpen={showMobileMenu} onClose={() => setShowMobileMenu(false)} />
     </div>
   );
