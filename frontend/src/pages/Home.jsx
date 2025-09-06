@@ -14,7 +14,6 @@ export default function Home() {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [sortBy, setSortBy] = useState('latest');
   const [filterBy, setFilterBy] = useState('all');
-  const [groupBy, setGroupBy] = useState('none');
 
   // Categories data
   const categories = [
@@ -36,36 +35,28 @@ export default function Home() {
     try {
       setLoading(true);
       const response = await productsAPI.getAll();
-      // Ensure we always set an array
       setProducts(Array.isArray(response.data) ? response.data : []);
     } catch (err) {
       console.error('Error fetching products:', err);
-      // If backend is not running, show a helpful message
       if (err.code === 'ERR_NETWORK' || err.message.includes('Network Error')) {
         setError('Backend server is not running. Please start the backend server on port 5000.');
       } else {
         setError('Failed to fetch products');
       }
-      setProducts([]); // Set empty array on error
+      setProducts([]);
     } finally {
       setLoading(false);
     }
   };
 
-  // Filter and sort products
   const filteredProducts = Array.isArray(products) ? products
     .filter(product => {
-      // Search filter
       const matchesSearch = product.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                            product.description.toLowerCase().includes(searchTerm.toLowerCase());
-      
-      // Category filter
       const matchesCategory = filterBy === 'all' || product.category.toLowerCase() === filterBy.toLowerCase();
-      
       return matchesSearch && matchesCategory;
     })
     .sort((a, b) => {
-      // Sort logic
       switch (sortBy) {
         case 'price-low':
           return a.price - b.price;
@@ -141,7 +132,7 @@ export default function Home() {
           />
         </div>
         
-        {/* Sort, Filter, Groupby Buttons */}
+        {/* Sort and Filter */}
         <div className="flex space-x-2 mb-4">
           <select 
             value={sortBy}
@@ -165,16 +156,6 @@ export default function Home() {
                 Filter: {category.name}
               </option>
             ))}
-          </select>
-          
-          <select 
-            value={groupBy}
-            onChange={(e) => setGroupBy(e.target.value)}
-            className="flex-1 p-2 border border-gray-300 rounded-lg text-sm"
-          >
-            <option value="none">Groupby: None</option>
-            <option value="category">Groupby: Category</option>
-            <option value="price">Groupby: Price Range</option>
           </select>
         </div>
       </div>
@@ -259,10 +240,8 @@ export default function Home() {
         )}
       </div>
 
-      {/* Bottom Navigation Spacer */}
       <div className="h-20"></div>
 
-      {/* Mobile Menu */}
       <MobileMenu isOpen={showMobileMenu} onClose={() => setShowMobileMenu(false)} />
     </div>
   );
